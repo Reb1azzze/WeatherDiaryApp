@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Server.Infrastructure;
 using Server.Models;
 using Microsoft.AspNetCore.Authorization;
+using User = Common.User;
 
 namespace Server.Controllers
 {
@@ -16,7 +17,6 @@ namespace Server.Controllers
         {
             this.repository = repository;
         }
-
 
         [HttpGet]
         public IActionResult Subscribe()
@@ -88,8 +88,7 @@ namespace Server.Controllers
         private IActionResult Show(SelectDiaryOptions options)
         {
             var email = HttpContext.User.Identity.Name;
-            var date = new DateTime(2021, 6, 15);
-            var records = repository.GetRecords(email, options.CityName, date);
+            var records = repository.GetRecords(email, options.CityName);
             records.Sort((r1, r2) => DateTime.Compare(r1.Date, r2.Date));
             var viewModel = new ShowDiaryViewModel() { Options = options, Records = records };
             return View("Show", viewModel);
